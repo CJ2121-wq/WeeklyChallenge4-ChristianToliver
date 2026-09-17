@@ -270,7 +270,9 @@ if (!gameWon && ! gameOver) {
         player.position.x += speed;
     }
 }
-
+collectibles.forEach((cube) => {
+    cube.rotation.y += 0.02;
+});
     handleCollisions();
 
     renderer.render(scene, camera);
