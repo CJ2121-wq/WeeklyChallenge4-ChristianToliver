@@ -47,6 +47,20 @@ timerMessage.style.textShadow = "2px 2px 4px #000000";
 timerMessage.style.zIndex = "1";
 document.body.appendChild(timerMessage);
 
+let score = 0;
+const scoreDisplay = document.createElement("div");
+scoreDisplay.textContent = "Score: 0";
+scoreDisplay.style.position = "fixed";
+scoreDisplay.style.top = "24px";
+scoreDisplay.style.left = "24px";
+scoreDisplay.style.fontFamily = "sans-serif";
+scoreDisplay.style.fontSize = "24px";
+scoreDisplay.style.fontWeight = "bold";
+scoreDisplay.style.color = "#ffffff";
+scoreDisplay.style.textShadow = "2px 2px 4px #000000";
+scoreDisplay.style.zIndex = "1";
+document.body.appendChild(scoreDisplay);
+
 // Ground Plane
 const planeGeometry = new THREE.PlaneGeometry(30, 30);
 const planeMaterial = new THREE.MeshStandardMaterial({
@@ -90,60 +104,32 @@ const player = new THREE.Mesh(
 player.position.y = 0.5;
 scene.add(player);
 
-const planeObjects = [
-    new THREE.Mesh(
-        new THREE.SphereGeometry(1, 32, 16),
-        new THREE.MeshStandardMaterial({ color: 0xff6600 })
-    ),
-    new THREE.Mesh(
-        new THREE.ConeGeometry(1, 2, 32),
-        new THREE.MeshStandardMaterial({ color: 0xff00aa })
-    ),
-    new THREE.Mesh(
-        new THREE.CylinderGeometry(1, 1, 2, 32),
-        new THREE.MeshStandardMaterial({ color: 0xffff00 })
-    ),
-    new THREE.Mesh(
-        new THREE.TorusGeometry(1, 0.35, 16, 32),
-        new THREE.MeshStandardMaterial({ color: 0x00ffff })
-    ),
-    new THREE.Mesh(
-        new THREE.IcosahedronGeometry(1.1, 0),
-        new THREE.MeshStandardMaterial({ color: 0x22cc55 })
-    )
-];
+// Collectible Cubes
+const collectibles = [];
 
-const targetObject = planeObjects[planeObjects.length - 1];
+for (let i = 0; i < 10; i++) {
 
-function placeObjects(objects) {
-    const objectPositions = [];
+    const collectibleGeometry = new THREE.BoxGeometry(1, 1, 1);
 
-    while (objectPositions.length < objects.length) {
-        const position = [
-            Math.random() * 12 - 6,
-            1,
-            Math.random() * 12 - 6
-        ];
-        const isFarEnoughFromPlayer = Math.hypot(position[0], position[2]) > 2.5;
-        const isFarEnoughFromObjects = objectPositions.every((otherPosition) =>
-            Math.hypot(
-                position[0] - otherPosition[0],
-                position[2] - otherPosition[2]
-            ) > 2.5
-        );
-
-        if (isFarEnoughFromPlayer && isFarEnoughFromObjects) {
-            objectPositions.push(position);
-        }
-    }
-
-    objects.forEach((object, index) => {
-        object.position.set(...objectPositions[index]);
-        scene.add(object);
+    const collectibleMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffff00
     });
+
+    const cube = new THREE.Mesh(
+        collectibleGeometry,
+        collectibleMaterial
+    );
+
+    cube.position.x = (Math.random() - 0.5) * 20;
+    cube.position.y = 0.5;
+    cube.position.z = (Math.random() - 0.5) * 20;
+
+    collectibles.push(cube);
+
+    scene.add(cube);
 }
 
-placeObjects(planeObjects);
+
 
 // Keyboard State Object
 const keys = {};
@@ -282,7 +268,7 @@ function animate() {
         player.position.x += speed;
     }
 
-    handleCollisions();
+ //   handleCollisions();
 
     renderer.render(scene, camera);
 }
