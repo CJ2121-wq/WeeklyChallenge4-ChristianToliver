@@ -195,38 +195,25 @@ function updateCollisionMessage(isColliding) {
 
 function handleCollisions() {
     playerBounds.setFromObject(player);
-    let isColliding = false;
 
-    planeObjects.forEach((object) => {
-        if (object === targetObject) {
-            if (targetFound) {
-                return;
-            }
+    for (let i = collectibles.length - 1; i >= 0; i--) {
 
-            objectBounds.setFromObject(object);
+        const cube = collectibles[i];
 
-            if (playerBounds.intersectsBox(objectBounds)) {
-                targetFound = true;
-                object.visible = false;
-            }
+        objectBounds.setFromObject(cube);
 
-            return;
+        if (playerBounds.intersectsBox(objectBounds)) {
+
+            scene.remove(cube);
+
+            collectibles.splice(i, 1);
+
+            score++;
+
+            scoreDisplay.textContent = "Score: " + score;
         }
-
-        objectBounds.setFromObject(object);
-        const objectIsColliding = playerBounds.intersectsBox(objectBounds);
-
-        if (objectIsColliding) {
-            isColliding = true;
-            object.visible = Math.floor(performance.now() / 100) % 2 === 0;
-        } else {
-            object.visible = true;
-        }
-    });
-
-    updateCollisionMessage(isColliding);
+    }
 }
-
 // Animation Loop
 function animate() {
 
@@ -268,7 +255,7 @@ function animate() {
         player.position.x += speed;
     }
 
- //   handleCollisions();
+    handleCollisions();
 
     renderer.render(scene, camera);
 }
