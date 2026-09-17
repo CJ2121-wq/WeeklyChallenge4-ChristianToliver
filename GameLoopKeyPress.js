@@ -48,6 +48,7 @@ timerMessage.style.zIndex = "1";
 document.body.appendChild(timerMessage);
 
 let score = 0;
+let gameWon = false;
 const scoreDisplay = document.createElement("div");
 scoreDisplay.textContent = "Score: 0";
 scoreDisplay.style.position = "fixed";
@@ -211,6 +212,14 @@ function handleCollisions() {
             score++;
 
             scoreDisplay.textContent = "Score: " + score;
+
+            if(collectibles.length === 0) {
+                gameWon = true;
+
+                collisionMessage.textContent = "You Win!";
+                collisionMessage.style.display = "block";
+                collisionMessage.style.color = "#22cc55";
+            }
         }
     }
 }
@@ -221,6 +230,7 @@ function animate() {
 
     updateTimer();
 
+if (!gameWon) {
     // WASD Controls
     if (keys["w"]) {
         player.position.z -= speed;
@@ -254,6 +264,7 @@ function animate() {
     if (keys["arrowright"]) {
         player.position.x += speed;
     }
+}
 
     handleCollisions();
 
