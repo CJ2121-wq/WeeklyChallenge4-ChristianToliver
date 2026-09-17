@@ -49,6 +49,7 @@ document.body.appendChild(timerMessage);
 
 let score = 0;
 let gameWon = false;
+let gameOver = false;
 const scoreDisplay = document.createElement("div");
 scoreDisplay.textContent = "Score: 0";
 scoreDisplay.style.position = "fixed";
@@ -156,7 +157,7 @@ const gameDuration = 20;
 
 function updateTimerMessage(secondsRemaining) {
     if (secondsRemaining === 0) {
-        timerMessage.textContent = "TIME'S UP!";
+        timerMessage.textContent = "Game Over!";
         timerMessage.style.top = "50%";
         timerMessage.style.right = "auto";
         timerMessage.style.left = "50%";
@@ -174,6 +175,10 @@ function updateTimer() {
     const elapsedSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
     const secondsRemaining = Math.max(gameDuration - elapsedSeconds, 0);
     updateTimerMessage(secondsRemaining);
+
+    if (secondsRemaining === 0 && !gameWon) {
+        gameOver = true;
+    }
 }
 
 function updateCollisionMessage(isColliding) {
@@ -230,7 +235,7 @@ function animate() {
 
     updateTimer();
 
-if (!gameWon) {
+if (!gameWon && ! gameOver) {
     // WASD Controls
     if (keys["w"]) {
         player.position.z -= speed;
